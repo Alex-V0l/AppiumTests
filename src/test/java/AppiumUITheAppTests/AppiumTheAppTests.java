@@ -158,6 +158,24 @@ public class AppiumTheAppTests {
         Assertions.assertTrue(Stratus.isDisplayed());
     }
 
+    @DisplayName("echo screen simple test")
+    @Tags({@Tag("UI"), @Tag("appium"), @Tag("smoke")})
+    @Test
+    void echoScreenTest() {
+        String textForTest = "New text";
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebElement echoScreen = wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.accessibilityId("Echo Box")));
+        echoScreen.click();
+        WebElement messageInput = wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.accessibilityId("messageInput")));
+        messageInput.sendKeys(textForTest);
+        driver.findElement(AppiumBy.accessibilityId("messageSaveBtn")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.androidUIAutomator("new UiSelector().text(\"Here's what you said before:\")")));
+        WebElement savedMessage = driver.findElement(AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"savedMessage\")"));
+
+        Assertions.assertEquals(textForTest, savedMessage.getText(), "Values must be equal");
+    }
+
     @DisplayName("photo demo test")
     @Tags({@Tag("UI"), @Tag("appium"), @Tag("smoke")})
     @Disabled //picture's locator is connected to its order while the set of pictures is random, so you can't find connection between picture founded by locator and text
